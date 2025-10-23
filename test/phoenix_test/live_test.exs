@@ -201,6 +201,16 @@ defmodule PhoenixTest.LiveTest do
       |> assert_has("#form-data", text: "form-button: save-owner-form")
     end
 
+    test "uses within/2 to disambiguate buttons", %{conn: conn} do
+      conn
+      |> visit("/live/index")
+      |> within("#owner-form", fn session ->
+        session
+        |> click_button("Display help text")
+        |> assert_has(".help-text", text: "Some help text")
+      end)
+    end
+
     test "follows form's redirect to live page", %{conn: conn} do
       conn
       |> visit("/live/index")

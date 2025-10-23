@@ -119,11 +119,21 @@ defmodule PhoenixTest.WebApp.IndexLive do
     <form id="owner-form" phx-submit="save-form">
       <label for="name">Name</label>
       <input id="name" name="name" />
+
+      <button type="button" phx-click="show-help-text">Display help text</button>
+      <div class="help-text">{@help_text_to_display}</div>
     </form>
 
     <button form="owner-form" name="form-button" value="save-owner-form">
       Save Owner Form
     </button>
+
+    <form id="other-form" phx-submit="save-other-form">
+      <label for="other-name">Name</label>
+      <input id="other-name" name="name" />
+      <button type="button" phx-click="show-help-text">Display help text</button>
+      <div class="help-text">{@help_text_to_display}</div>
+    </form>
 
     <form id="nested-form" phx-submit="save-form">
       <label for="user-name">User Name</label>
@@ -620,6 +630,7 @@ defmodule PhoenixTest.WebApp.IndexLive do
       |> assign(:trigger_multiple_submit, false)
       |> assign(:redirect_and_trigger_submit, false)
       |> assign(:upload_change_triggered, false)
+      |> assign(:help_text_to_display, "")
       |> allow_upload(:avatar, accept: ~w(.jpg .jpeg))
       |> allow_upload(:avatar_2, accept: ~w(.jpg .jpeg))
       |> allow_upload(:avatar_3, accept: ~w(.jpg .jpeg))
@@ -850,6 +861,10 @@ defmodule PhoenixTest.WebApp.IndexLive do
     checked_keys = Map.update(socket.assigns.checked_keys, id, true, &(not &1))
 
     {:noreply, assign(socket, :checked_keys, checked_keys)}
+  end
+
+  def handle_event("show-help-text", _, socket) do
+    {:noreply, assign(socket, :help_text_to_display, "Some help text")}
   end
 
   defp render_input_data(key, value) when value == "" or is_nil(value) do

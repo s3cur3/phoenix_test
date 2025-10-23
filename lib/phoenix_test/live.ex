@@ -92,6 +92,12 @@ defmodule PhoenixTest.Live do
   defp handle_click_button(session, button) do
     html = session.current_operation.html
 
+    button =
+      case session.within do
+        selector when is_binary(selector) -> %{button | selector: selector <> " " <> button.selector}
+        _ -> button
+      end
+
     cond do
       Button.phx_click?(button) ->
         session.view
